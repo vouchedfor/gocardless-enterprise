@@ -144,7 +144,7 @@ class Creditor extends Model
     /**
      * @param \GoCardless\Enterprise\Model\CreditorBankAccount $eur_payout_account
      */
-    public function setEurPayoutAccount($eur_payout_account)
+    public function setEurPayoutAccount(CreditorBankAccount $eur_payout_account)
     {
         $this->eur_payout_account = $eur_payout_account;
     }
@@ -160,7 +160,7 @@ class Creditor extends Model
     /**
      * @param \GoCardless\Enterprise\Model\CreditorBankAccount $gbp_payout_account
      */
-    public function setGbpPayoutAccount($gbp_payout_account)
+    public function setGbpPayoutAccount(CreditorBankAccount $gbp_payout_account)
     {
         $this->gbp_payout_account = $gbp_payout_account;
     }

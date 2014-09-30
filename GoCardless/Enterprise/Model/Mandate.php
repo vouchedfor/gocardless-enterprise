@@ -130,7 +130,7 @@ class Mandate extends Model
     /**
      * @param \GoCardless\Enterprise\Model\Creditor $creditor
      */
-    public function setCreditor($creditor)
+    public function setCreditor(Creditor $creditor)
     {
         $this->creditor = $creditor;
     }

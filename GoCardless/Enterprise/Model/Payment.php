@@ -97,7 +97,7 @@ class Payment extends Model
     /**
      * @param \GoCardless\Enterprise\Model\Mandate $mandate
      */
-    public function setMandate($mandate)
+    public function setMandate(Mandate $mandate)
     {
         $this->mandate = $mandate;
     }
@@ -111,11 +111,11 @@ class Payment extends Model
     }
 
     /**
-     * @param string $chage_date
+     * @param string $charge_date
      */
-    public function setCollectedAt($chage_date)
+    public function setCollectedAt($charge_date)
     {
-        $this->charge_date = $chage_date;
+        $this->charge_date = $charge_date;
     }
 
     /**

@@ -132,7 +132,7 @@ class CustomerBankAccount extends Model
     /**
      * @param \GoCardless\Enterprise\Model\Customer $customer
      */
-    public function setCustomer($customer)
+    public function setCustomer(Customer $customer)
     {
         $this->customer = $customer;
     }
