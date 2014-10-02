@@ -29,11 +29,6 @@ class Customer extends Model
     /**
      * @var string
      */
-    protected $organisation_name;
-
-    /**
-     * @var string
-     */
     protected $address_line1;
 
     /**
@@ -197,22 +192,6 @@ class Customer extends Model
     public function getGivenName()
     {
         return $this->given_name;
-    }
-
-    /**
-     * @param string $organisation_name
-     */
-    public function setOrganisationName($organisation_name)
-    {
-        $this->organisation_name = $organisation_name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganisationName()
-    {
-        return $this->organisation_name;
     }
 
     /**
