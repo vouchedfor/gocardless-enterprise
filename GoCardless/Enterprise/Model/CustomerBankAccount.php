@@ -9,7 +9,7 @@
 namespace GoCardless\Enterprise\Model;
 
 
-class CustomerBankAccount extends Model
+class CustomerBankAccount extends MetadataModel
 {
     /**
      * @var string

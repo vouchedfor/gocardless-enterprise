@@ -9,7 +9,7 @@
 namespace GoCardless\Enterprise\Model;
 
 
-class Payment extends Model
+class Payment extends MetadataModel
 {
     /**
      * @var int

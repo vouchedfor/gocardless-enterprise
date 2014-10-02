@@ -9,7 +9,7 @@
 namespace GoCardless\Enterprise\Model;
 
 
-class Mandate extends Model
+class Mandate extends MetadataModel
 {
     /**
      * @var string

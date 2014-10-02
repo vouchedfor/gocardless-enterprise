@@ -9,7 +9,7 @@
 namespace GoCardless\Enterprise\Model;
 
 
-class Model
+abstract class Model
 {
     /**
      * @var string
