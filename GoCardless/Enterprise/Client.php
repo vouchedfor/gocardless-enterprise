@@ -274,6 +274,16 @@ class Client
         return $account;
     }
 
+    public function disableCreditorBankAccount($id)
+    {
+        $response = $this->post(self::ENDPOINT_CREDITOR_BANK, '', $id.'/actions/disable');
+
+        $account = new CreditorBankAccount();
+        $account->fromArray($response);
+
+        return $account;
+    }
+
     /**
      * @param int $limit
      * @param null $after
@@ -322,11 +332,11 @@ class Client
      * @return array
      * @throws ApiException
      */
-    protected function post($endpoint, $body)
+    protected function post($endpoint, $body, $path = null)
     {
         try{
             $body = json_encode([$endpoint => $body]);
-            $response = $this->client->post($this->makeUrl($endpoint), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->setAuth($this->username, $this->password)->send();
+            $response = $this->client->post($this->makeUrl($endpoint, $path), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->setAuth($this->username, $this->password)->send();
             $responseArray = json_decode($response->getBody(true), true);
             return $responseArray[$endpoint];
         } catch(BadResponseException $e){
