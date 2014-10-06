@@ -31,6 +31,9 @@ class CreditorBankAccount extends Model
      */
     protected $account_number_ending;
 
+
+    protected $creditor;
+
     /**
      * @var string
      */
@@ -45,6 +48,27 @@ class CreditorBankAccount extends Model
      * @var string
      */
     protected $bank_name;
+
+
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $arr = parent::toArray();
+
+        if(array_key_exists("creditor", $arr)){
+            unset($arr["creditor"]);
+        }
+
+        if($this->getCreditor() instanceof Creditor)
+        {
+            $arr["links"]["creditor"] = $this->getCreditor()->getId();
+        }
+
+        return $arr;
+    }
 
     /**
      * @param string $account_holder_name
@@ -92,6 +116,23 @@ class CreditorBankAccount extends Model
     public function getAccountNumberEnding()
     {
         return $this->account_number_ending;
+    }
+
+
+    /**
+     * @param \GoCardless\Enterprise\Model\Creditor $customer
+     */
+    public function setCreditor(Creditor $creditor)
+    {
+        $this->creditor = $creditor;
+    }
+
+    /**
+     * @return \GoCardless\Enterprise\Model\Creditor
+     */
+    public function getCreditor()
+    {
+        return $this->creditor;
     }
 
     /**
