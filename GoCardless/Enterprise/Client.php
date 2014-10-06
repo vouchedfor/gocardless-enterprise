@@ -275,6 +275,22 @@ class Client
     }
 
     /**
+     * @param int $limit
+     * @param null $after
+     * @param null $before
+     * @return CreditorBankAccounts[]
+     */
+    public function listCreditorBankAccounts($limit = 50, $after = null, $before = null)
+    {
+        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+        $response = $this->get(self::ENDPOINT_CREDITOR_BANK, $parameters);
+        $creditorBankAccounts = $this->responseToObjects(new CreditorBankAccount(), $response);
+
+        return $creditorBankAccounts;
+    }
+
+
+    /**
      * @param Model $example
      * @param $response
      * @return Model[]
