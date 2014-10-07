@@ -274,6 +274,18 @@ class Client
         return $account;
     }
 
+    /**
+     * @param $id
+     * @return CreditorBankAccount
+     */
+    public function getCreditorBankAccount($id)
+    {
+        $account = new CreditorBankAccount();
+        $account->fromArray($this->get(self::ENDPOINT_CREDITOR_BANK, [], $id));
+        return $account;
+    }
+
+
     public function disableCreditorBankAccount($id)
     {
         $response = $this->post(self::ENDPOINT_CREDITOR_BANK, '', $id.'/actions/disable');
