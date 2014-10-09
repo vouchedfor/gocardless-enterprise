@@ -111,12 +111,33 @@ class Payment extends MetadataModel
     }
 
     /**
+     * Note: Sam Anthony 09-10-2014 I am not sure what method is for, I am guessing it is a typing error?
+     *       I did not want to remove this in case other users of the library are using it.
+     *
      * @param string $charge_date
+     * @deprecated please use setChargeDate()
      */
     public function setCollectedAt($charge_date)
     {
         $this->charge_date = $charge_date;
     }
+
+    /**
+     * @param string $charge_date_mixed
+     */
+    public function setChargeDate( $charge_date_mixed)
+    {
+        if ($charge_date_mixed instanceof \DateTime)
+        {
+            $this->charge_date = $charge_date_mixed->format('Y-m-d');
+        }
+        else
+        {
+            $this->charge_date = $charge_date_mixed;
+        }
+
+    }
+
 
     /**
      * @return string
