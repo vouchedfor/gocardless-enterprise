@@ -37,7 +37,11 @@ abstract class MetadataModel extends Model
     {
         $arr = parent::toArray();
 
-        $arr["metadata"] = $this->getMetadata();
+        $metadata = $this->getMetadata();
+        if ($metadata)
+        {
+            $arr["metadata"] = $metadata;
+        }
 
         return $arr;
     }
