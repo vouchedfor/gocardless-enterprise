@@ -103,14 +103,6 @@ class CreditorBankAccount extends Model
     }
 
     /**
-     * @param string $account_number_ending
-     */
-    public function setAccountNumberEnding($account_number_ending)
-    {
-        $this->account_number_ending = $account_number_ending;
-    }
-
-    /**
      * @return string
      */
     public function getAccountNumberEnding()

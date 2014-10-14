@@ -19,6 +19,11 @@ class CustomerBankAccount extends MetadataModel
     /**
      * @var string
      */
+    protected $account_number_ending;
+
+    /**
+     * @var string
+     */
     protected $sort_code;
 
     /**
@@ -95,6 +100,14 @@ class CustomerBankAccount extends MetadataModel
     public function getAccountNumber()
     {
         return $this->account_number;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountNumberEnding()
+    {
+        return $this->account_number_ending;
     }
 
     /**
