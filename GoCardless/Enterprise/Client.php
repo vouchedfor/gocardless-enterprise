@@ -17,6 +17,7 @@ use GoCardless\Enterprise\Model\Customer;
 use GoCardless\Enterprise\Model\Mandate;
 use GoCardless\Enterprise\Model\Model;
 use GoCardless\Enterprise\Model\Payment;
+use GoCardless\Enterprise\Model\Refund;
 use Guzzle\Http\Exception\BadResponseException;
 
 class Client
@@ -53,6 +54,8 @@ class Client
     const ENDPOINT_MANDATE = "mandates";
 
     const ENDPOINT_PAYMENTS = "payments";
+
+    const ENDPOINT_REFUNDS = "refunds";
 
     const ENDPOINT_CREDITORS = "creditors";
 
@@ -233,6 +236,24 @@ class Client
 
         return $payments;
     }
+
+
+    /**
+     * @param Payment $payment
+     * @return Payment
+     */
+    public function createRefund(Refund $refund)
+    {
+        $arr = $refund->toArray($refund);
+
+        $arr['total_amount_confirmation'] = $arr['amount'];
+
+        $response = $this->post(self::ENDPOINT_REFUNDS, $arr);
+        $refund->fromArray($response);
+        return $refund;
+    }
+
+
 
 
     /**
