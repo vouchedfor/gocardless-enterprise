@@ -394,4 +394,26 @@ class Client
             throw ApiException::fromBadResponseException($e);
         }
     }
+
+    public function rawRequest($endpoint, $rawbody, $httpMethod)
+    {
+        try{
+            if (strtolower($httpMethod) == 'get')
+            {
+                $response = $this->client->get($this->makeUrl($endpoint), $this->defaultHeaders, ["query" => [] ])->setAuth($this->username, $this->password)->send();
+            }
+            elseif(strtolower($httpMethod) == 'post')
+            {
+                $response = $this->client->post($this->makeUrl($endpoint), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $rawbody)->setAuth($this->username, $this->password)->send();
+            }
+            else
+            {
+                throw new \Exception('At the moment this function only supports get and post');
+            }
+            return $response->getBody(true);
+
+        } catch (BadResponseException $e){
+            throw ApiException::fromBadResponseException($e);
+        }
+    }
 } 
