@@ -416,4 +416,39 @@ class Client
             throw ApiException::fromBadResponseException($e);
         }
     }
-} 
+
+    /***************************************************
+     * Start: Direct Debit Guarantee related functions
+     **************************************************/
+    public function getDirectDebitGuaranteeData($companyName, $workingDays)
+    {
+        $data['heading'] = "The Direct Debit Guarantee";
+        $data['paragraphs'][] = "This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debit";
+        $data['paragraphs'][] = "If there are any change to the amount, date or frequency of your Direct Debit Gocardless Ltd re: {$companyName} will notify you {$workingDays} working days in advanced of your account being debited or as otherwise agreed. If you request GoCardless Ltd re: {$companyName} to collect a payment, confirmation of the amount and date will be given to you at the time of the request";
+        $data['paragraphs'][] = "If an error is made in the payment of your Direct Debit, by GoCardless Ltd re: {$companyName} or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society";
+        $data['paragraphs'][] = "If you receive a refund you are not entitled to, you must pay it back when GoCardless Ltd re: {$companyName} asks you to";
+        $data['paragraphs'][] = "You can cancel a Direct Debit at any time by simply contacting your bank or building society. Written confirmation may be required. Please also notify us.";
+
+        return $data;
+    }
+
+    public function getDirectDebitGuaranteeHtml($companyName, $workingDays, $headingTag = 'h1')
+    {
+        $data = $this->getDirectDebitGuaranteeData($companyName, $workingDays);
+
+        $html = "<{$headingTag}>{$data['heading']}</{$headingTag}>";
+        $html .= "<ul>";
+        foreach ($data['paragraphs'] as $paragraph)
+        {
+            $html .= "<li>{$paragraph}</li>";
+        }
+        $html .= "</ul>";
+
+        return $html;
+    }
+    /**************************************************
+     * End: Direct Debit Guarantee related functions
+     *************************************************/
+
+
+}
