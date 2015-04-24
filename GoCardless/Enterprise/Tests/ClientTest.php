@@ -212,6 +212,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testListMandates
      * @param Mandate $mandate
+     * @return Payment
      */
     public function testCreatePayment(Mandate $mandate)
     {
@@ -225,8 +226,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotNull($payment->getId());
         $this->assertNotNull($payment->getCreatedAt());
-        $this->assertEquals("pending", $payment->getStatus());
+        $this->assertEquals("pending_submission", $payment->getStatus());
         $this->assertNotNull($payment->getChargeDate());
+
+        return $payment;
+    }
+
+    /**
+     * @depends testCreatePayment
+     * @param Payment $payment
+     * @internal param Mandate $mandate
+     */
+    public function testCancelPayment(Payment $payment)
+    {
+        $payment = $this->getClient()->cancelPayment($payment);
+
+        $this->assertNotNull($payment->getId());
+        $this->assertEquals("cancelled", $payment->getStatus());
     }
 
     public function testListPayments()
@@ -256,6 +272,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($newArray, $oldArray);
     }
-
-
-} 
+}

@@ -61,6 +61,8 @@ class Client
 
     const ENDPOINT_CREDITOR_BANK = "creditor_bank_accounts";
 
+    const CANCEL_ACTION ="/actions/cancel";
+
     /**
      * @param \Guzzle\Http\Client $client
      * @param array $config
@@ -239,8 +241,9 @@ class Client
 
 
     /**
-     * @param Payment $payment
-     * @return Payment
+     * @param Refund $refund
+     * @return Refund
+     * @throws \Exception
      */
     public function createRefund(Refund $refund)
     {
@@ -253,8 +256,17 @@ class Client
         return $refund;
     }
 
-
-
+    /**
+     * @param Payment $payment
+     * @return Payment
+     * @throws \Exception
+     */
+    public function cancelPayment(Payment $payment)
+    {
+        $response = $this->post(self::ENDPOINT_PAYMENTS, [], $payment->getId() . self::CANCEL_ACTION);
+        $payment->fromArray($response);
+        return $payment;
+    }
 
     /**
      * @param int $limit
@@ -360,16 +372,21 @@ class Client
     }
 
     /**
-     * @param string $endpoint
-     * @param string $body
-     * @return array
-     * @throws ApiException
+     * @param $endpoint
+     * @param $body
+     * @param null $path
+     * @return mixed
+     * @throws \Exception
      */
     protected function post($endpoint, $body, $path = null)
     {
         try{
-            $body = json_encode([$endpoint => $body]);
-            $response = $this->client->post($this->makeUrl($endpoint, $path), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->setAuth($this->username, $this->password)->send();
+            if (!empty($body)) {
+                $body = json_encode([$endpoint => $body]);
+            }
+
+            $response = $this->client->post($this->makeUrl($endpoint, $path) . '/', $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->setAuth($this->username, $this->password)->send();
+
             $responseArray = json_decode($response->getBody(true), true);
             return $responseArray[$endpoint];
         } catch(BadResponseException $e){
@@ -378,11 +395,11 @@ class Client
     }
 
     /**
-     * @param string $endpoint
+     * @param $endpoint
      * @param array $parameters
-     * @param string $path
-     * @throws ApiException
-     * @return array
+     * @param null $path
+     * @return mixed
+     * @throws \Exception
      */
     protected function get($endpoint, $parameters = [], $path = null)
     {
