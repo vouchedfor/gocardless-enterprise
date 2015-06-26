@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 14/08/14
- * Time: 15:51
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class CreditorBankAccount
+ * @package GoCardless\Enterprise\Model
+ */
 class CreditorBankAccount extends Model
 {
     /**
@@ -112,7 +108,7 @@ class CreditorBankAccount extends Model
 
 
     /**
-     * @param \GoCardless\Enterprise\Model\Creditor $customer
+     * @param Creditor $creditor
      */
     public function setCreditor(Creditor $creditor)
     {
@@ -120,7 +116,7 @@ class CreditorBankAccount extends Model
     }
 
     /**
-     * @return \GoCardless\Enterprise\Model\Creditor
+     * @return mixed
      */
     public function getCreditor()
     {
