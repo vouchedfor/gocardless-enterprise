@@ -81,7 +81,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $account = new CustomerBankAccount();
         $account->setAccountNumber("55779911");
-        $account->setSortCode("200000");
+        $account->setBranchCode("200000");
         $account->setCountryCode("GB");
         $account->setAccountHolderName("Mr P D Pamment");
         $account->setCustomer($customer);
@@ -245,6 +245,29 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("cancelled", $payment->getStatus());
     }
 
+    /**
+     * @depends testListMandates
+     * @param Mandate $mandate
+     */
+    public function testCreatePaymentWithMetadata(Mandate $mandate)
+    {
+        $payment = new Payment();
+        $payment->setAmount(10000);
+        $payment->setCurrency("GBP");
+        $payment->setDescription("test");
+        $payment->setMetadata(["payment_id" => 12]);
+        $payment->setMandate($mandate);
+
+        $payment = $this->getClient()->createPayment($payment);
+
+        $this->assertNotNull($payment->getId());
+        $this->assertNotNull($payment->getCreatedAt());
+        $this->assertEquals("pending_submission", $payment->getStatus());
+        $this->assertNotNull($payment->getChargeDate());
+        $this->assertArrayHasKey("payment_id", $payment->getMetadata());
+        $this->assertEquals(12, $payment->getMetadata()["payment_id"]);
+    }
+
     public function testListPayments()
     {
         $payments = $this->getClient()->listPayments();
@@ -271,5 +294,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $oldArray = $old->toArray();
 
         $this->assertEquals($newArray, $oldArray);
+    }
+
+    /**
+     * @depends testListMandates
+     * @param Mandate $mandate
+     */
+    public function testCancelMandate($mandate)
+    {
+        $mandate = $this->getClient()->cancelMandate($mandate);
+
+        $this->assertEquals("cancelled", $mandate->getStatus());
     }
 }
