@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 12/08/14
- * Time: 10:31
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class Payment
+ * @package GoCardless\Enterprise\Model
+ */
 class Payment extends MetadataModel
 {
+
     /**
      * @var int
      */
@@ -50,6 +47,11 @@ class Payment extends MetadataModel
      * @var array
      */
     protected $metadata = array();
+
+    /**
+     * @var string
+     */
+    protected $reference;
 
     /**
      * @param int $amount
@@ -132,17 +134,12 @@ class Payment extends MetadataModel
      */
     public function setChargeDate( $charge_date_mixed)
     {
-        if ($charge_date_mixed instanceof \DateTime)
-        {
+        if ($charge_date_mixed instanceof \DateTime) {
             $this->charge_date = $charge_date_mixed->format('Y-m-d');
-        }
-        else
-        {
+        } else {
             $this->charge_date = $charge_date_mixed;
         }
-
     }
-
 
     /**
      * @return string
@@ -169,6 +166,22 @@ class Payment extends MetadataModel
     }
 
     /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+    }
+
+    /**
      * @param int $transaction_fee
      */
     public function setTransactionFee($transaction_fee)
@@ -176,11 +189,18 @@ class Payment extends MetadataModel
         $this->transaction_fee = $transaction_fee;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public function addMetadata($key, $value)
     {
         $this->metadata[$key] = (string) $value;
     }
 
+    /**
+     * @return array
+     */
     public function getMetadata()
     {
         return $this->metadata;
@@ -194,20 +214,21 @@ class Payment extends MetadataModel
         return $this->transaction_fee;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $arr = parent::toArray();
 
-        if(array_key_exists("mandate", $arr)){
+        if(array_key_exists("mandate", $arr)) {
             unset($arr["mandate"]);
         }
 
-        if($this->getMandate()){
+        if($this->getMandate()) {
             $arr["links"]["mandate"] = $this->getMandate()->getId();
         }
 
         return $arr;
     }
-
-
 } 

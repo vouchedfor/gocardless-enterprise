@@ -220,6 +220,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $payment->setAmount(10000);
         $payment->setCurrency("GBP");
         $payment->setDescription("test");
+        $payment->setReference("test-reference");
         $payment->setMandate($mandate);
 
         $payment = $this->getClient()->createPayment($payment);
@@ -227,6 +228,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($payment->getId());
         $this->assertNotNull($payment->getCreatedAt());
         $this->assertEquals("pending_submission", $payment->getStatus());
+        $this->assertEquals("test-reference", $payment->getReference());
         $this->assertNotNull($payment->getChargeDate());
 
         return $payment;
