@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 17:36
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class Mandate
+ * @package GoCardless\Enterprise\Model
+ */
 class Mandate extends MetadataModel
 {
     /**

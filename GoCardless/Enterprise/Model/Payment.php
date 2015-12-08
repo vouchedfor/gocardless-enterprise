@@ -44,11 +44,6 @@ class Payment extends MetadataModel
     protected $mandate;
 
     /**
-     * @var array
-     */
-    protected $metadata = array();
-
-    /**
      * @var string
      */
     protected $reference;
@@ -130,15 +125,11 @@ class Payment extends MetadataModel
     }
 
     /**
-     * @param string $charge_date_mixed
+     * @param \DateTime $charge_date
      */
-    public function setChargeDate( $charge_date_mixed)
+    public function setChargeDate(\DateTime $charge_date)
     {
-        if ($charge_date_mixed instanceof \DateTime) {
-            $this->charge_date = $charge_date_mixed->format('Y-m-d');
-        } else {
-            $this->charge_date = $charge_date_mixed;
-        }
+        $this->charge_date = $charge_date->format('Y-m-d');
     }
 
     /**
@@ -187,23 +178,6 @@ class Payment extends MetadataModel
     public function setTransactionFee($transaction_fee)
     {
         $this->transaction_fee = $transaction_fee;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function addMetadata($key, $value)
-    {
-        $this->metadata[$key] = (string) $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
     }
 
     /**

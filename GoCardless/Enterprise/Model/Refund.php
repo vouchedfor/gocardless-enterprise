@@ -1,15 +1,17 @@
 <?php
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class Refund
+ * @package GoCardless\Enterprise\Model
+ */
 class Refund extends MetadataModel
 {
+
     /**
      * @var int
      */
     protected $amount;
-
 
     /**
      * @var Payment
@@ -32,7 +34,6 @@ class Refund extends MetadataModel
         return $this->amount;
     }
 
-
     /**
      * @param \GoCardless\Enterprise\Model\Payment $payment
      */
@@ -49,21 +50,21 @@ class Refund extends MetadataModel
         return $this->payment;
     }
 
-
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $arr = parent::toArray();
 
-        if(array_key_exists("payment", $arr)){
+        if (array_key_exists("payment", $arr)) {
             unset($arr["payment"]);
         }
 
-        if($this->getPayment()){
+        if ($this->getPayment()) {
             $arr["links"]["payment"] = $this->getPayment()->getId();
         }
 
         return $arr;
     }
-
-
 }
