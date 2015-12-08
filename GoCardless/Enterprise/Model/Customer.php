@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 11:50
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class Customer
+ * @package GoCardless\Enterprise\Model
+ */
 class Customer extends MetadataModel
 {
+
     /**
      * @var string
      */
@@ -242,10 +239,13 @@ class Customer extends MetadataModel
         return $this->bankAccounts;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $arr = parent::toArray();
-        if(array_key_exists("bankAccounts", $arr)){
+        if (array_key_exists("bankAccounts", $arr)) {
             unset($arr["bankAccounts"]);
         }
 

@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 15:53
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class CustomerBankAccount
+ * @package GoCardless\Enterprise\Model
+ */
 class CustomerBankAccount extends MetadataModel
 {
+
     /**
      * @var string
      */
@@ -58,19 +55,17 @@ class CustomerBankAccount extends MetadataModel
     {
         $arr = parent::toArray();
 
-        if(array_key_exists("customer", $arr)){
+        if (array_key_exists("customer", $arr)) {
             unset($arr["customer"]);
         }
 
-        if($this->getCustomer() instanceof Customer)
-        {
+        if ($this->getCustomer() instanceof Customer) {
             $arr["links"]["customer"] = $this->getCustomer()->getId();
         }
 
-        if(array_key_exists("mandates", $arr)){
+        if (array_key_exists("mandates", $arr)) {
             unset($arr["mandates"]);
         }
-
 
         return $arr;
     }
@@ -194,6 +189,4 @@ class CustomerBankAccount extends MetadataModel
     {
         return $this->mandates;
     }
-
-
-} 
+}
