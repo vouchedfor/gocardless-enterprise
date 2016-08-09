@@ -188,17 +188,6 @@ class Client
         return $mandate;
     }
 
-
-    public function getMandatePdf($id)
-    {
-        try{
-            $response = $this->client->get($this->makeUrl(self::ENDPOINT_MANDATE, $id), $this->defaultHeaders + ["Accept" => "application/pdf", "GoCardless"])->send();
-            return $response->getBody(true);
-        } catch(BadResponseException $e) {
-            throw ApiException::fromBadResponseException($e);
-        }
-    }
-
     /**
      * @param int $limit
      * @param string $after

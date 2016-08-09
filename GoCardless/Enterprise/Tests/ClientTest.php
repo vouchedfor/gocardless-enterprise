@@ -33,7 +33,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = $this->getClient();
 
         $customer = new Customer();
-        $customer->setEmail("paul+".time().substr(uniqid(),0, 3)."@alphalend.com");
+        $customer->setEmail("paul+".time().substr(uniqid(),0, 3)."@vouchedfor.co.uk");
         $customer->setGivenName("Paul");
         $customer->setFamilyName("Pamment");
         $customer->setAddressLine1("Flat 3G");
@@ -200,17 +200,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testListMandates
-     * @param Mandate $old
-     */
-    public function testGetMandatePdf($old)
-    {
-        $mandate = $this->getClient()->getMandatePdf($old->getId());
-
-        $this->assertEquals("%PDF", substr($mandate, 0, 4));
-    }
-
-    /**
-     * @depends testListMandates
      * @param Mandate $mandate
      * @return Payment
      */
@@ -220,7 +209,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $payment->setAmount(10000);
         $payment->setCurrency("GBP");
         $payment->setDescription("test");
-        $payment->setReference("test-reference");
+        $payment->setReference("test");
         $payment->setMandate($mandate);
 
         $payment = $this->getClient()->createPayment($payment);
@@ -228,7 +217,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($payment->getId());
         $this->assertNotNull($payment->getCreatedAt());
         $this->assertEquals("pending_submission", $payment->getStatus());
-        $this->assertEquals("test-reference", $payment->getReference());
+        $this->assertEquals("test", $payment->getReference());
         $this->assertNotNull($payment->getChargeDate());
 
         return $payment;
@@ -257,7 +246,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $payment->setAmount(10000);
         $payment->setCurrency("GBP");
         $payment->setDescription("test");
-        $payment->setMetadata(["payment_id" => 12]);
+        $payment->setMetadata("payment_id", 12);
         $payment->setMandate($mandate);
 
         $payment = $this->getClient()->createPayment($payment);
