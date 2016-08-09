@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 11:30
- */
-
 namespace GoCardless\Enterprise;
-
 
 use GoCardless\Enterprise\Exceptions\ApiException;
 use GoCardless\Enterprise\Model\CreditorBankAccount;
@@ -61,7 +53,7 @@ class Client
 
     const ENDPOINT_CREDITOR_BANK = "creditor_bank_accounts";
 
-    const CANCEL_ACTION ="/actions/cancel";
+    const CANCEL_ACTION = "/actions/cancel";
 
     /**
      * @param \Guzzle\Http\Client $client
@@ -75,7 +67,7 @@ class Client
         $this->secret = $config["webhook_secret"];
         $this->defaultHeaders = [
             "GoCardless-Version" => $config["gocardlessVersion"],
-            "Authorization" => "Bearer ". $config["token"]
+            "Authorization" => "Bearer " . $config["token"]
         ];
     }
 
@@ -121,7 +113,11 @@ class Client
      */
     public function listCustomers($limit = 50, $after = null, $before = null)
     {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
         $response = $this->get(self::ENDPOINT_CUSTOMER, $parameters);
         $customers = $this->responseToObjects(new Customer(), $response);
 
@@ -134,7 +130,8 @@ class Client
      */
     public function createCustomerBankAccount(CustomerBankAccount $account)
     {
-        $response = $this->post(self::ENDPOINT_CUSTOMER_BANK, $account->toArray());
+        $response = $this->post(self::ENDPOINT_CUSTOMER_BANK,
+            $account->toArray());
         $account->fromArray($response);
         return $account;
     }
@@ -157,11 +154,19 @@ class Client
      *
      * @return array
      */
-    public function listCustomerBankAccounts($limit = 50, $after = null, $before = null)
-    {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+    public function listCustomerBankAccounts(
+        $limit = 50,
+        $after = null,
+        $before = null
+    ) {
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
         $response = $this->get(self::ENDPOINT_CUSTOMER_BANK, $parameters);
-        $accounts = $this->responseToObjects(new CustomerBankAccount(), $response);
+        $accounts = $this->responseToObjects(new CustomerBankAccount(),
+            $response);
 
         return $accounts;
     }
@@ -196,7 +201,11 @@ class Client
      */
     public function listMandates($limit = 50, $after = null, $before = null)
     {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
         $response = $this->get(self::ENDPOINT_MANDATE, $parameters);
         $mandates = $this->responseToObjects(new Mandate(), $response);
 
@@ -204,23 +213,25 @@ class Client
     }
 
     /**
-     * @param Mandate $mandate
-     * @return Mandate
-     * @throws BadResponseException
+     * @param \GoCardless\Enterprise\Model\Mandate $mandate
+     * @return \GoCardless\Enterprise\Model\Mandate
+     * @throws \Exception
      */
     public function cancelMandate(Mandate $mandate)
     {
-        try{
+        try {
             $body = '{"data":{}}';
             $endpoint = self::ENDPOINT_MANDATE;
-            $path = $mandate->getId()."/actions/cancel";
-            $response = $this->client->post($this->makeUrl($endpoint, $path), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->send();
+            $path = $mandate->getId() . "/actions/cancel";
+            $response = $this->client->post($this->makeUrl($endpoint, $path),
+                $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"],
+                $body)->send();
             $responseArray = json_decode($response->getBody(true), true);
             $response = $responseArray[$endpoint];
 
             $mandate->fromArray($response);
             return $mandate;
-        } catch(BadResponseException $e){
+        } catch (BadResponseException $e) {
             throw ApiException::fromBadResponseException($e);
         }
     }
@@ -252,11 +263,19 @@ class Client
      * @param null $after
      * @param null $before
      * @param array $options
-     * @return Payment[]
+     * @return \GoCardless\Enterprise\Model\Model[]
      */
-    public function listPayments($limit = 50, $after = null, $before = null, array $options = [])
-    {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+    public function listPayments(
+        $limit = 50,
+        $after = null,
+        $before = null,
+        array $options = []
+    ) {
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
 
         $parameters = array_merge($parameters, $options);
 
@@ -274,7 +293,7 @@ class Client
      */
     public function createRefund(Refund $refund)
     {
-        $arr = $refund->toArray($refund);
+        $arr = $refund->toArray();
 
         $arr['total_amount_confirmation'] = $arr['amount'];
 
@@ -290,7 +309,8 @@ class Client
      */
     public function cancelPayment(Payment $payment)
     {
-        $response = $this->post(self::ENDPOINT_PAYMENTS, [], $payment->getId() . self::CANCEL_ACTION);
+        $response = $this->post(self::ENDPOINT_PAYMENTS, [],
+            $payment->getId() . self::CANCEL_ACTION);
         $payment->fromArray($response);
         return $payment;
     }
@@ -299,11 +319,15 @@ class Client
      * @param int $limit
      * @param null $after
      * @param null $before
-     * @return Creditor[]
+     * @return \GoCardless\Enterprise\Model\Model[]
      */
     public function listCreditors($limit = 50, $after = null, $before = null)
     {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
         $response = $this->get(self::ENDPOINT_CREDITORS, $parameters);
         $creditors = $this->responseToObjects(new Creditor(), $response);
 
@@ -326,9 +350,12 @@ class Client
      * @param bool $setAsDefault
      * @return CreditorBankAccount
      */
-    public function createCreditorBankAccount(CreditorBankAccount $account, $setAsDefault = false)
-    {
-        $response = $this->post(self::ENDPOINT_CREDITOR_BANK, ["set_as_default_payout_account" => $setAsDefault]+$account->toArray());
+    public function createCreditorBankAccount(
+        CreditorBankAccount $account,
+        $setAsDefault = false
+    ) {
+        $response = $this->post(self::ENDPOINT_CREDITOR_BANK,
+            ["set_as_default_payout_account" => $setAsDefault] + $account->toArray());
         $account->fromArray($response);
 
         return $account;
@@ -348,7 +375,8 @@ class Client
 
     public function disableCreditorBankAccount($id)
     {
-        $response = $this->post(self::ENDPOINT_CREDITOR_BANK, '', $id.'/actions/disable');
+        $response = $this->post(self::ENDPOINT_CREDITOR_BANK, '',
+            $id . '/actions/disable');
 
         $account = new CreditorBankAccount();
         $account->fromArray($response);
@@ -360,13 +388,21 @@ class Client
      * @param int $limit
      * @param null $after
      * @param null $before
-     * @return CreditorBankAccounts[]
+     * @return \GoCardless\Enterprise\Model\Model[]
      */
-    public function listCreditorBankAccounts($limit = 50, $after = null, $before = null)
-    {
-        $parameters = array_filter(["after" => $after, "before" => $before, "limit" => $limit]);
+    public function listCreditorBankAccounts(
+        $limit = 50,
+        $after = null,
+        $before = null
+    ) {
+        $parameters = array_filter([
+            "after" => $after,
+            "before" => $before,
+            "limit" => $limit
+        ]);
         $response = $this->get(self::ENDPOINT_CREDITOR_BANK, $parameters);
-        $creditorBankAccounts = $this->responseToObjects(new CreditorBankAccount(), $response);
+        $creditorBankAccounts = $this->responseToObjects(new CreditorBankAccount(),
+            $response);
 
         return $creditorBankAccounts;
     }
@@ -379,7 +415,7 @@ class Client
      */
     protected function responseToObjects(Model $example, $response)
     {
-        $objects = array_map(function($data) use ($example){
+        $objects = array_map(function ($data) use ($example) {
             $object = clone $example;
             $object->fromArray($data);
             return $object;
@@ -395,68 +431,80 @@ class Client
      */
     protected function makeUrl($endpoint, $path = false)
     {
-        return $this->baseUrl.$endpoint.($path ? "/".$path : "");
+        return $this->baseUrl . $endpoint . ($path ? "/" . $path : "");
     }
 
     /**
      * @param $endpoint
      * @param $body
-     * @param false $path
-     * @return array
-     * @throws ApiException
+     * @param bool $path
+     * @return mixed
+     * @throws \Exception
      */
     protected function post($endpoint, $body, $path = false)
     {
-        try{
+        try {
             if (!empty($body)) {
                 $body = json_encode([$endpoint => $body]);
             }
 
-            $response = $this->client->post($this->makeUrl($endpoint, $path), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $body)->send();
+            $response = $this->client->post($this->makeUrl($endpoint, $path),
+                $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"],
+                $body)->send();
 
             $responseArray = json_decode($response->getBody(true), true);
             return $responseArray[$endpoint];
-        } catch(BadResponseException $e){
+        } catch (BadResponseException $e) {
             throw ApiException::fromBadResponseException($e);
         }
     }
 
     /**
-     * @param string $endpoint
+     * @param $endpoint
      * @param array $parameters
      * @param null $path
-     * @return array
-     * @throws ApiException
+     * @return mixed
+     * @throws \Exception
      */
     protected function get($endpoint, $parameters = [], $path = null)
     {
-        try{
-            $response = $this->client->get($this->makeUrl($endpoint, $path), $this->defaultHeaders, ["query" => $parameters])->send();
+        try {
+            $response = $this->client->get($this->makeUrl($endpoint, $path),
+                $this->defaultHeaders, ["query" => $parameters])->send();
             $responseArray = json_decode($response->getBody(true), true);
             return $responseArray[$endpoint];
-        } catch (BadResponseException $e){
+        } catch (BadResponseException $e) {
             throw ApiException::fromBadResponseException($e);
         }
     }
 
+    /**
+     * @param $endpoint
+     * @param $rawbody
+     * @param $httpMethod
+     * @return mixed
+     * @throws \Exception
+     */
     public function rawRequest($endpoint, $rawbody, $httpMethod)
     {
-        try{
-            if (strtolower($httpMethod) == 'get')
-            {
-                $response = $this->client->get($this->makeUrl($endpoint), $this->defaultHeaders, ["query" => [] ])->setAuth($this->username, $this->password)->send();
-            }
-            elseif(strtolower($httpMethod) == 'post')
-            {
-                $response = $this->client->post($this->makeUrl($endpoint), $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"], $rawbody)->setAuth($this->username, $this->password)->send();
-            }
-            else
-            {
+        try {
+            if (strtolower($httpMethod) == 'get') {
+                $response = $this->client->get($this->makeUrl($endpoint),
+                    $this->defaultHeaders, ["query" => []])
+                    ->setAuth($this->username, $this->password)
+                    ->send();
+            } elseif (strtolower($httpMethod) == 'post') {
+                $response = $this->client->post($this->makeUrl($endpoint),
+                    $this->defaultHeaders + ["Content-Type" => "application/vnd.api+json"],
+                    $rawbody)
+                    ->setAuth($this->username, $this->password)
+                    ->send();
+            } else {
                 throw new \Exception('At the moment this function only supports get and post');
             }
             return $response->getBody(true);
 
-        } catch (BadResponseException $e){
+        } catch (BadResponseException $e) {
             throw ApiException::fromBadResponseException($e);
         }
     }
@@ -464,6 +512,11 @@ class Client
     /***************************************************
      * Start: Direct Debit Guarantee related functions
      **************************************************/
+    /**
+     * @param $companyName
+     * @param $workingDays
+     * @return mixed
+     */
     public function getDirectDebitGuaranteeData($companyName, $workingDays)
     {
         $data['heading'] = "The Direct Debit Guarantee";
@@ -476,14 +529,22 @@ class Client
         return $data;
     }
 
-    public function getDirectDebitGuaranteeHtml($companyName, $workingDays, $headingTag = 'h1')
-    {
+    /**
+     * @param $companyName
+     * @param $workingDays
+     * @param string $headingTag
+     * @return string
+     */
+    public function getDirectDebitGuaranteeHtml(
+        $companyName,
+        $workingDays,
+        $headingTag = 'h1'
+    ) {
         $data = $this->getDirectDebitGuaranteeData($companyName, $workingDays);
 
         $html = "<{$headingTag}>{$data['heading']}</{$headingTag}>";
         $html .= "<ul>";
-        foreach ($data['paragraphs'] as $paragraph)
-        {
+        foreach ($data['paragraphs'] as $paragraph) {
             $html .= "<li>{$paragraph}</li>";
         }
         $html .= "</ul>";
@@ -493,6 +554,4 @@ class Client
     /**************************************************
      * End: Direct Debit Guarantee related functions
      *************************************************/
-
-
 }

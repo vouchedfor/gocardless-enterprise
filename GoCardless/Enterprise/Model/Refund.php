@@ -19,6 +19,11 @@ class Refund extends MetadataModel
     protected $payment;
 
     /**
+     * @var string
+     */
+    protected $reference;
+
+    /**
      * @param int $amount
      */
     public function setAmount($amount)
@@ -48,6 +53,22 @@ class Refund extends MetadataModel
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
     }
 
     /**
