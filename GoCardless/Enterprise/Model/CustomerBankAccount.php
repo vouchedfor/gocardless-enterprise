@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 15:53
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
-class CustomerBankAccount extends Model
+/**
+ * Class CustomerBankAccount
+ * @package GoCardless\Enterprise\Model
+ */
+class CustomerBankAccount extends MetadataModel
 {
+
     /**
      * @var string
      */
@@ -19,7 +16,12 @@ class CustomerBankAccount extends Model
     /**
      * @var string
      */
-    protected $sort_code;
+    protected $account_number_ending;
+
+    /**
+     * @var string
+     */
+    protected $branch_code;
 
     /**
      * @var string
@@ -53,19 +55,17 @@ class CustomerBankAccount extends Model
     {
         $arr = parent::toArray();
 
-        if(array_key_exists("customer", $arr)){
+        if (array_key_exists("customer", $arr)) {
             unset($arr["customer"]);
         }
 
-        if($this->getCustomer() instanceof Customer)
-        {
+        if ($this->getCustomer() instanceof Customer) {
             $arr["links"]["customer"] = $this->getCustomer()->getId();
         }
 
-        if(array_key_exists("mandates", $arr)){
+        if (array_key_exists("mandates", $arr)) {
             unset($arr["mandates"]);
         }
-
 
         return $arr;
     }
@@ -103,6 +103,14 @@ class CustomerBankAccount extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getAccountNumberEnding()
+    {
+        return $this->account_number_ending;
+    }
+
+    /**
      * @param string $country_code
      */
     public function setCountryCode($country_code)
@@ -137,7 +145,7 @@ class CustomerBankAccount extends Model
     /**
      * @param \GoCardless\Enterprise\Model\Customer $customer
      */
-    public function setCustomer($customer)
+    public function setCustomer(Customer $customer)
     {
         $this->customer = $customer;
     }
@@ -151,19 +159,19 @@ class CustomerBankAccount extends Model
     }
 
     /**
-     * @param string $sort_code
+     * @param string $branch_code
      */
-    public function setSortCode($sort_code)
+    public function setBranchCode($branch_code)
     {
-        $this->sort_code = $sort_code;
+        $this->branch_code = $branch_code;
     }
 
     /**
      * @return string
      */
-    public function getSortCode()
+    public function getBranchCode()
     {
-        return $this->sort_code;
+        return $this->branch_code;
     }
 
     /**
@@ -181,6 +189,4 @@ class CustomerBankAccount extends Model
     {
         return $this->mandates;
     }
-
-
-} 
+}

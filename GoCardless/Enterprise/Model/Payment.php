@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 12/08/14
- * Time: 10:31
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
-class Payment extends Model
+/**
+ * Class Payment
+ * @package GoCardless\Enterprise\Model
+ */
+class Payment extends MetadataModel
 {
+
     /**
      * @var int
      */
@@ -47,9 +44,9 @@ class Payment extends Model
     protected $mandate;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $metadata = array();
+    protected $reference;
 
     /**
      * @param int $amount
@@ -102,7 +99,7 @@ class Payment extends Model
     /**
      * @param \GoCardless\Enterprise\Model\Mandate $mandate
      */
-    public function setMandate($mandate)
+    public function setMandate(Mandate $mandate)
     {
         $this->mandate = $mandate;
     }
@@ -116,11 +113,23 @@ class Payment extends Model
     }
 
     /**
-     * @param string $chage_date
+     * Note: Sam Anthony 09-10-2014 I am not sure what method is for, I am guessing it is a typing error?
+     *       I did not want to remove this in case other users of the library are using it.
+     *
+     * @param string $charge_date
+     * @deprecated please use setChargeDate()
      */
-    public function setCollectedAt($chage_date)
+    public function setCollectedAt($charge_date)
     {
-        $this->charge_date = $chage_date;
+        $this->charge_date = $charge_date;
+    }
+
+    /**
+     * @param \DateTime $charge_date
+     */
+    public function setChargeDate(\DateTime $charge_date)
+    {
+        $this->charge_date = $charge_date->format('Y-m-d');
     }
 
     /**
@@ -148,29 +157,27 @@ class Payment extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+    }
+
+    /**
      * @param int $transaction_fee
      */
     public function setTransactionFee($transaction_fee)
     {
         $this->transaction_fee = $transaction_fee;
-    }
-
-    public function addMetadata($key, $value)
-    {
-        $this->metadata[$key] = (string) $value;
-    }
-
-    public function setMetadata(array $metadata)
-    {
-        foreach($metadata as $k => $v){
-            $metadata[$k] = (string) $v;
-        }
-        $this->metadata = $metadata;
-    }
-
-    public function getMetadata()
-    {
-        return $this->metadata;
     }
 
     /**
@@ -181,20 +188,21 @@ class Payment extends Model
         return $this->transaction_fee;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $arr = parent::toArray();
 
-        if(array_key_exists("mandate", $arr)){
+        if(array_key_exists("mandate", $arr)) {
             unset($arr["mandate"]);
         }
 
-        if($this->getMandate()){
+        if($this->getMandate()) {
             $arr["links"]["mandate"] = $this->getMandate()->getId();
         }
 
         return $arr;
     }
-
-
 } 

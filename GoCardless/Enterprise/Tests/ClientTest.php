@@ -81,7 +81,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $account = new CustomerBankAccount();
         $account->setAccountNumber("55779911");
-        $account->setSortCode("200000");
+        $account->setBranchCode("200000");
         $account->setCountryCode("GB");
         $account->setAccountHolderName("Mr P D Pamment");
         $account->setCustomer($customer);
@@ -212,6 +212,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testListMandates
      * @param Mandate $mandate
+     * @return Payment
      */
     public function testCreatePayment(Mandate $mandate)
     {
@@ -219,6 +220,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $payment->setAmount(10000);
         $payment->setCurrency("GBP");
         $payment->setDescription("test");
+        $payment->setReference("test-reference");
         $payment->setMandate($mandate);
 
         $payment = $this->getClient()->createPayment($payment);
@@ -226,7 +228,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($payment->getId());
         $this->assertNotNull($payment->getCreatedAt());
         $this->assertEquals("pending_submission", $payment->getStatus());
+        $this->assertEquals("test-reference", $payment->getReference());
         $this->assertNotNull($payment->getChargeDate());
+
+        return $payment;
+    }
+
+    /**
+     * @depends testCreatePayment
+     * @param Payment $payment
+     * @internal param Mandate $mandate
+     */
+    public function testCancelPayment(Payment $payment)
+    {
+        $payment = $this->getClient()->cancelPayment($payment);
+
+        $this->assertNotNull($payment->getId());
+        $this->assertEquals("cancelled", $payment->getStatus());
     }
 
     /**
@@ -290,4 +308,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals("cancelled", $mandate->getStatus());
     }
-} 
+}

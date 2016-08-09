@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 14/08/14
- * Time: 15:51
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
+/**
+ * Class CreditorBankAccount
+ * @package GoCardless\Enterprise\Model
+ */
 class CreditorBankAccount extends Model
 {
     /**
@@ -31,6 +27,9 @@ class CreditorBankAccount extends Model
      */
     protected $account_number_ending;
 
+
+    protected $creditor;
+
     /**
      * @var string
      */
@@ -45,6 +44,27 @@ class CreditorBankAccount extends Model
      * @var string
      */
     protected $bank_name;
+
+
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $arr = parent::toArray();
+
+        if(array_key_exists("creditor", $arr)){
+            unset($arr["creditor"]);
+        }
+
+        if($this->getCreditor() instanceof Creditor)
+        {
+            $arr["links"]["creditor"] = $this->getCreditor()->getId();
+        }
+
+        return $arr;
+    }
 
     /**
      * @param string $account_holder_name
@@ -79,19 +99,28 @@ class CreditorBankAccount extends Model
     }
 
     /**
-     * @param string $account_number_ending
-     */
-    public function setAccountNumberEnding($account_number_ending)
-    {
-        $this->account_number_ending = $account_number_ending;
-    }
-
-    /**
      * @return string
      */
     public function getAccountNumberEnding()
     {
         return $this->account_number_ending;
+    }
+
+
+    /**
+     * @param Creditor $creditor
+     */
+    public function setCreditor(Creditor $creditor)
+    {
+        $this->creditor = $creditor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditor()
+    {
+        return $this->creditor;
     }
 
     /**

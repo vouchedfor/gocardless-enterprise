@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Paul
- * Date: 08/08/14
- * Time: 11:50
- */
-
 namespace GoCardless\Enterprise\Model;
 
-
-class Customer extends Model
+/**
+ * Class Customer
+ * @package GoCardless\Enterprise\Model
+ */
+class Customer extends MetadataModel
 {
+
     /**
      * @var string
      */
@@ -25,11 +22,6 @@ class Customer extends Model
      * @var string
      */
     protected $family_name;
-
-    /**
-     * @var string
-     */
-    protected $organisation_name;
 
     /**
      * @var string
@@ -200,22 +192,6 @@ class Customer extends Model
     }
 
     /**
-     * @param string $organisation_name
-     */
-    public function setOrganisationName($organisation_name)
-    {
-        $this->organisation_name = $organisation_name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganisationName()
-    {
-        return $this->organisation_name;
-    }
-
-    /**
      * @param string $postal_code
      */
     public function setPostalCode($postal_code)
@@ -263,10 +239,13 @@ class Customer extends Model
         return $this->bankAccounts;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $arr = parent::toArray();
-        if(array_key_exists("bankAccounts", $arr)){
+        if (array_key_exists("bankAccounts", $arr)) {
             unset($arr["bankAccounts"]);
         }
 

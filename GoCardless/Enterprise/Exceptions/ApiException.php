@@ -13,6 +13,11 @@ use Guzzle\Http\Exception\BadResponseException;
 
 class ApiException extends BadResponseException
 {
+
+    /**
+     * @param BadResponseException $old
+     * @return \Exception
+     */
     public static function fromBadResponseException(BadResponseException $old)
     {
         $new = new self($old->getMessage());
